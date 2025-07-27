@@ -35,6 +35,10 @@ router.get('/', async (req: Request, res: Response) => {
         date: date || new Date().toISOString().split('T')[0],
         preferences: preferences || 'any',
         weather,
+        tempFlags: {
+            isTooHot,
+            isTooCold
+        },
         suggestions: filteredSuggestions.slice(0, 5)
     });
   } catch (err) {
