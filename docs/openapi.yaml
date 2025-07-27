@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  title: Weather-to-Event Suggestion API
+  version: 1.0.0
+  description: |
+    Suggests activities based on weather and location using OpenWeatherMap and Google Places.
+
+servers:
+  - url: https://weathereventsapi.onrender.com
+  - url: http://localhost:3000
+
+paths:
+  /suggestions:
+    get:
+      summary: Get activity suggestions
+      parameters:
+        - in: query
+          name: location
+          required: true
+          schema:
+            type: string
+          description: City or place to search (e.g., "Nashville")
+        - in: query
+          name: date
+          required: false
+          schema:
+            type: string
+            format: date
+          description: ISO date string (defaults to today)
+        - in: query
+          name: preferences
+          required: false
+          schema:
+            type: string
+            enum: [indoor, outdoor]
+          description: Suggestion type filter
+      responses:
+        '200':
+          description: List of activity suggestions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  location:
+                    type: string
+                  date:
+                    type: string
+                  preferences:
+                    type: string
+                  weather:
+                    type: object
+                    properties:
+                      description:
+                        type: string
+                      temperatureC:
+                        type: number
+                      isBadWeather:
+                        type: boolean
+                  suggestions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        address:
+                          type: string
+                        type:
+                          type: string
+                        rating:
+                          type: number
+                          nullable: true
+                        isOutdoor:
+                          type: boolean
