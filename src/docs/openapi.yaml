@@ -9,10 +9,14 @@ servers:
   - url: https://weathereventsapi.onrender.com
   - url: http://localhost:3000
 
+
 paths:
   /suggestions:
     get:
       summary: Get activity suggestions
+      description: |
+        Returns recommended activities or venues based on current weather conditions and location.
+        Uses OpenWeatherMap and Google Places data to generate personalized suggestions.
       parameters:
         - in: query
           name: location
@@ -20,20 +24,23 @@ paths:
           schema:
             type: string
           description: City or place to search (e.g., "Nashville")
+          example: Nashville
         - in: query
           name: date
           required: false
           schema:
             type: string
             format: date
-          description: ISO date string (defaults to today)
+          description: ISO date string. Defaults to today if not provided.
+          example: "2025-07-26"
         - in: query
           name: preferences
           required: false
           schema:
             type: string
             enum: [indoor, outdoor]
-          description: Suggestion type filter
+          description: Filter results based on indoor or outdoor preference.
+          example: outdoor
       responses:
         '200':
           description: List of activity suggestions
@@ -46,6 +53,7 @@ paths:
                     type: string
                   date:
                     type: string
+                    format: date
                   preferences:
                     type: string
                   weather:
@@ -70,6 +78,36 @@ paths:
                           type: string
                         rating:
                           type: number
-                          nullable: true
                         isOutdoor:
                           type: boolean
+              examples:
+                typical:
+                  summary: Sample Response for Nashville
+                  value:
+                    location: "Nashville"
+                    date: "2025-07-26"
+                    preferences: "outdoor"
+                    weather:
+                      description: "clear sky"
+                      temperatureC: 29.5
+                      isBadWeather: false
+                    suggestions:
+                      - name: "Centennial Park"
+                        address: "2500 West End Ave"
+                        type: "park"
+                        rating: 4.7
+                        isOutdoor: true
+                      - name: "Shelby Bottoms Greenway"
+                        address: "1900 Davidson St"
+                        type: "park"
+                        rating: 4.5
+                        isOutdoor: true
+        '400':
+          description: Missing or invalid parameters
+          content:
+            application/json:
+              examples:
+                missing-location:
+                  summary: No location provided
+                  value:
+                    error: "Missing required parameter: location"

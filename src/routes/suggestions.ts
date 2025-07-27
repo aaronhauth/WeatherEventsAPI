@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { getCurrentWeather } from '../services/weatherService';
+import { getWeatherForDate } from '../services/weatherService';
 import { getNearbyPlaces } from '../services/placesService';
 
 const router = Router();
@@ -12,7 +12,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 
   try {
-    const weather = await getCurrentWeather(location);
+    const weather = await getWeatherForDate(location, date as string);
 
     const places = await getNearbyPlaces(location);
 
