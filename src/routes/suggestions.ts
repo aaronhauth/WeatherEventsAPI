@@ -16,9 +16,17 @@ router.get('/', async (req: Request, res: Response) => {
 
     const places = await getNearbyPlaces(location);
 
+
+    const isTooHot = weather.temperatureC >= 32;
+    const isTooCold = weather.temperatureC <= 5;
+
     const filteredSuggestions = places.filter(place => {
-    if (preferences === 'indoor' && place.isOutdoor) return false;
-    if (preferences === 'outdoor' && !place.isOutdoor) return false;
+        if (weather.isBadWeather && place.isOutdoor) return false;
+        if ((isTooHot || isTooCold) && place.isOutdoor) return false;
+
+        if (preferences === 'indoor' && place.isOutdoor) return false;
+        if (preferences === 'outdoor' && !place.isOutdoor) return false;
+
         return true;
     });
 

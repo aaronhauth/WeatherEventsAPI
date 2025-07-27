@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import suggestionsRoute from './routes/suggestions';
+import { checkApiKey } from './middleware/authMiddleware';
 import cors from 'cors';
 
 // Import Swagger UI and YAML parser
@@ -24,7 +25,7 @@ app.get('/health', (_req, res) => {
 });
 
 // Suggestions route
-app.use('/suggestions', suggestionsRoute);
+app.use('/suggestions', checkApiKey , suggestionsRoute);
 
 // Swagger UI setup
 const openapiPath = path.join(__dirname, 'docs', 'openapi.yaml');
