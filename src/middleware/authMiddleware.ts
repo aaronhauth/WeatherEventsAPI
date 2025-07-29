@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 export function checkApiKey(req: Request, res: Response, next: NextFunction) {
-  const apiKey = req.headers['x-rapidapi-proxy-secret'] || req.query.api_key;
+  const apiKey = req.header('x-rapidapi-proxy-secret') || req.query.api_key;
   const expectedKey = process.env.API_SECRET_KEY;
 
   if (!apiKey) {
